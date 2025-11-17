@@ -1,0 +1,136 @@
+openapi: 3.0.3
+info:
+  title: Student REST API
+  description: Dokumentasi API CRUD Mahasiswa
+  version: "1.0.0"
+
+servers:
+  - url: http://localhost/OpenApi/htdocs/api/students.php   
+
+paths:
+  /students:
+    get:
+      summary: Ambil semua data mahasiswa
+      responses:
+        "200":
+          description: Data mahasiswa berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Student"
+
+    post:
+      summary: Tambah data mahasiswa baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudentInput"
+      responses:
+        "201":
+          description: Data berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: integer
+
+  /students/{id}:
+    get:
+      summary: Ambil mahasiswa berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Data mahasiswa ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
+        "404":
+          description: Mahasiswa tidak ditemukan
+
+    put:
+      summary: Update data mahasiswa berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudentInput"
+      responses:
+        "200":
+          description: Data mahasiswa berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+    delete:
+      summary: Hapus data mahasiswa berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Data mahasiswa berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "400":
+          description: ID tidak valid
+
+components:
+  schemas:
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+        nim:
+          type: string
+        name:
+          type: string
+        major:
+          type: string
+
+    StudentInput:
+      type: object
+      required:
+        - nim
+        - name
+        - major
+      properties:
+        nim:
+          type: string
+        name:
+          type: string
+        major:
+          type: string
